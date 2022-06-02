@@ -56,7 +56,54 @@ since the last call else `false`.
 gradually fades out.
     - `delay`: The millisecond wait moving to the next LED.
     - `brightness`: The brightness for the leading LED's. Value between 0 - 255.
-    - `is_white_only`: If true only the colour white will be used else the
+    - `is_white_only`: If `true` only the colour white will be used, else the
     colour will change through a rainbow of colours.
-    - `is_one_at_a_time`: If true there will be one leading LED else there will
-    a leading group of two LED's.
+    - `is_one_at_a_time`: If `true` there will be one leading LED else there
+    will a leading group of two LED's.
+
+- `multiple_spinning_leds`: Two LED's spin around the ring of LED's.
+    - `delay`: The millisecond wait moving to the next LED.
+    - `brightness`: The brightness for the leading LED's. Value between 0 - 255.
+    - `is_white_only`: If `true` only the colour white will be used, else the
+    colour will change through a rainbow of colours.
+    - `is_same_colour`: If `true` both LED's will be the same colour and cycle
+    through the rainbow at the same time. Else the ring will have an imaginary
+    rainbow around it and each LED will light up the correct colour to match
+    that rainbow.
+    - `cyon_effect`: If `true` each LED will have a tail like the `cyon`
+    function above, else they will just light up on their own.
+
+- `colour_rotation`: All LED's will light up as a rainbow and slowly rotate the
+colour around the ring.
+    - `delay`: The millisecond wait moving to the next LED.
+    - `brightness`: The brightness for the leading LED's. Value between 0 - 255.
+    - `is_one_at_a_time`: If `true` the colour will change every one LED, else
+    the colour will change every two LED's.
+
+- `fade_in_and_out`: All LED's fade in and out together.
+    - `delay`: The millisecond wait moving to the next LED.
+    - `brightness`: The brightness for the leading LED's. Value between 0 - 255.
+    - `is_white_only`: If `true` only the colour white will be used, else a
+    rainbow of colours will be used.
+
+- `led_flash_and_fade`: An LED will flash on and slowly fade out.
+`set_all_black` must be called before the first call to this function.
+    - `delay`: The millisecond wait moving to the next LED.
+    - `brightness`: The brightness for the leading LED's. Value between 0 - 255.
+    - `is_white_only`: If `true` only the colour white will be used, else a
+    rainbow of colours will be used.
+    - `is_one_at_a_time`: If `true` one LED will flash on and fade out, else two
+    LED's.
+    - `cycle_colours`: If `true` the colours will cycle through the rainbow,
+    else a random colour will be chosen.
+    - `random_led`: If `true` a random LED will flash on and fade out, else it
+    will cycle around the ring.
+
+- `fade_all`: Fades all LED's using an nscale.
+    - `nscale`: The scale to fade the LED's.
+
+- `set_all_black`: Sets all LED's to off/black.
+
+- `set_black_except`: Sets all LED's to off/black except the provided indexes.
+    - `index_1`: First index to not set to off/black.
+    - `index_2`: Second index to not set to off/black.

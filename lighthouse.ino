@@ -151,42 +151,51 @@ void multiple_spinning_leds(
 void colour_rotation(
     const short delay, const uint8_t brightness, const bool is_one_at_a_time)
 {
+    // Integer division round up
+    static const uint8_t colour_change_per_led(
+        (255 + (number_of_leds - 1)) / number_of_leds);
+    // Adding this so we don't have to compute a "constant" lots of times
+    static const uint8_t colour_change_per_led_group(colour_change_per_led * 2);
+
     static uint8_t colour(0);
 
     if (has_delay_elapsed(delay))
     {
+        uint8_t current_colour(colour);
+
         if (is_one_at_a_time)
         {
             for (CRGB& led : leds)
             {
-                // 15 is 255 / 17 (1 extra led) to make it rotate
-                led = CHSV(colour += 15, 255, brightness);
+                led = CHSV(
+                    current_colour += colour_change_per_led, 255, brightness);
             }
         }
         else
         {
             for (uint8_t i = 1; i < number_of_leds; i += 2)
             {
-                // 28.33333 is 255 / 9 (1 extra section) to make it rotate
-                leds[i] = CHSV(colour, 255, brightness);
+                leds[i] = CHSV(
+                    current_colour += colour_change_per_led_group,
+                    255,
+                    brightness);
 
                 /* Starting at 1 and have this if to get the correct groups of
                  * two for my dividers
                  */
                 if (i != number_of_leds - 1)
                 {
-                    leds[i + 1] = CHSV(colour, 255, brightness);
+                    leds[i + 1] = CHSV(current_colour, 255, brightness);
                 }
                 else
                 {
-                    leds[0] = CHSV(colour, 255, brightness);
+                    leds[0] = CHSV(current_colour, 255, brightness);
                 }
-
-                colour += 28;
             }
         }
 
         FastLED.show();
+        ++colour;
     }
 }
 
@@ -325,9 +334,9 @@ void set_black_except(const uint8_t index_1, const uint8_t index_2)
 
 void loop()
 {
-    // cyon(250, 80, false, false);
-    // colour_rotation(200, 100, false);
-    // multiple_spinning_leds(200, 100, true, true);
+    // cyon(90, 125, true, true);
+    colour_rotation(10, 100, true);
+    // multiple_spinning_leds(90, 125, false, false);
     // fade_in_and_out(15, 125, false);
-    led_flash_and_fade(5, 125, false, true, true, false);
+    // led_flash_and_fade(5, 125, false, true, true, false);
 }
