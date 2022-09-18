@@ -6,6 +6,14 @@ hobby, so I will make a lighthouse that has a Neopixel ring with 16 pixels at
 the top. I will use a Digispark microcontroller to keep the size small although
 the available memory is very limited.
 
+## Modes
+* `colour_rotation(14, 110, true);`
+* `cyon(100, 110, true, true);`
+* `cyon(100, 110, false, true);`
+* `multiple_spinning_leds(100, 110, false, false);`
+* `multiple_spinning_leds(100, 110, false, true);`
+* `multiple_spinning_leds(100, 110, true, true);`
+
 ## To-Do
 - [ ] Fade one in and then one out and on to the next (and for two at a time)
     - [ ] White only

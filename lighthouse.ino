@@ -1,11 +1,34 @@
+#include <ezButton.h>
 #include <FastLED.h>
 
+enum class animations
+{
+    colour_rotation,
+    cyon_white,
+    cyon_colour,
+    spinning_different_colour,
+    spinning_same_colour,
+    spinning_white
+};
+
+ezButton button(0);
 const uint8_t number_of_leds(16);
 CRGBArray<number_of_leds> leds;
+uint8_t index{0};
+uint8_t number_of_animations{6};
+animations mode[] = {
+    animations::colour_rotation,
+    animations::cyon_white,
+    animations::cyon_colour,
+    animations::spinning_different_colour,
+    animations::spinning_same_colour,
+    animations::spinning_white
+};
 
 void setup()
 {
-    FastLED.addLeds<NEOPIXEL, 0>(leds, number_of_leds);
+    button.setDebounceTime(50);
+    FastLED.addLeds<NEOPIXEL, 1>(leds, number_of_leds);
     // Uses 5% space, pretty safe to remove for 16 LED's
     FastLED.setBrightness(
         calculate_max_brightness_for_power_vmA(
@@ -81,7 +104,7 @@ void cyon(
 
         FastLED.show();
         // Make this configurable?
-        fade_all(75);
+        fade_all(100);
         // Make this configurable?
         colour += 8;
     }
@@ -135,7 +158,7 @@ void multiple_spinning_leds(
         {
             FastLED.show();
             // Make this configurable?
-            fade_all(75);
+            fade_all(100);
         }
         else
         {
@@ -216,7 +239,7 @@ void fade_in_and_out(
 
         FastLED.show();
 
-        if (current_brightness == 0)
+        if (current_brightness == 10)
         {
             colour += 10;
             fading_out = false;
@@ -319,6 +342,7 @@ void fade_all(const uint8_t nscale)
 void set_all_black()
 {
     leds = CRGB::Black;
+    FastLED.show();
 }
 
 void set_black_except(const uint8_t index_1, const uint8_t index_2)
@@ -334,9 +358,54 @@ void set_black_except(const uint8_t index_1, const uint8_t index_2)
 
 void loop()
 {
-    // cyon(90, 125, true, true);
-    colour_rotation(10, 100, true);
-    // multiple_spinning_leds(90, 125, false, false);
-    // fade_in_and_out(15, 125, false);
-    // led_flash_and_fade(5, 125, false, true, true, false);
+    static uint8_t brightness{110};
+    const short pot{analogRead(1)};
+    brightness = map(pot, 0, 1023, 30, 254);
+
+    button.loop();
+
+    if (button.isPressed())
+    {
+        index = (index + 1) % number_of_animations;
+        set_all_black();
+    }
+
+     switch (mode[index])
+     {
+         case animations::colour_rotation:
+         {
+             colour_rotation(14, brightness, true);
+             break;
+         }
+         case animations::cyon_white:
+         {
+             cyon(100, brightness, true, true);
+             break;
+         }
+         case animations::cyon_colour:
+         {
+             cyon(100, brightness, false, true);
+             break;
+         }
+         case animations::spinning_different_colour:
+         {
+             multiple_spinning_leds(100, brightness, false, false);
+             break;
+         }
+         case animations::spinning_same_colour:
+         {
+             multiple_spinning_leds(100, brightness, false, true);
+             break;
+         }
+         case animations::spinning_white:
+         {
+             multiple_spinning_leds(100, brightness, true, true);
+             break;
+         }
+         default:
+         {
+             multiple_spinning_leds(100, brightness, false, true);
+             break;
+         }
+     }
 }
